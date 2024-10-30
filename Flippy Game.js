@@ -1,59 +1,53 @@
-//Окно игры
-var cvs = document.getElementById("canvas");//Перетаскиваем Canvas из html в JS и getElementById присваемает к id='canvas' переменную cvs
-var ctx = cvs.getContext("2d");// Указываем что canvas в 2D
 
-//Объекты ориентации в пространстве
-var bird = new Image();//Объект птица это изображение (которое скоро мы импортируем)
-var bg = new Image();//Задний фон это изображение
-var fg = new Image();//Передний фон это изображение
-var pipeUp = new Image();//Верхнии препядствия это изображения
-var pipeBottom = new Image();//нижнии препядствия это изображения
+var cvs = document.getElementById("canvas");
+var ctx = cvs.getContext("2d");
 
-//Импорт файлов
-bird.src = "flappy_bird_bird.png";//Импортируем изображение с птицой
-bg.src = "bg.png";//Импортируем изображение заднего фона
-fg.src = "fg.png";//Импортируем изображение переднего фона
-pipeUp.src = "pipeUp.png";//Импортируем изображение с верхними препядствиями
-pipeBottom.src = "pipeBottom.png";//Импортируем изображение с нижними препядствиями
 
-// Звуковые файлы
-var fly = new Audio();//Звук прыжка находится под значением fly
-var score_audio = new Audio();//Звук каждого успешно пройденного препядствия находится под значением score
+var bird = new Image();
+var bg = new Image();
+var fg = new Image()
+var pipeUp = new Image();
+var pipeBottom = new Image();
 
-fly.src = "fly.mp3";//Импортируем звук в в звуковой объект fly (src это метод для присваивания объектам (звукового или нет) файлы или файл)
-score_audio.src = "score.mp3";//Импортируем звук в в звуковой объект score
+
+bird.src = "flappy_bird_bird.png";
+bg.src = "bg.png"
+fg.src = "fg.png";/
+pipeUp.src = "pipeUp.png";
+pipeBottom.src = "pipeBottom.png";
+
+
 
 var gap = 120;//Это расстояние между двумя препядствиями (верхним и нижним). Что-бы пица могла пролетать не задивая блоки препядствий
 
 
-// При нажатии на какую-либо кнопку
-document.addEventListener("keydown", moveUp);//Если пользователь нажмет на кнопку (document.addEventListener = document - это текст, addEventListener - он отслеживает клавиатуру на какое-либо действие) на какую-нибудь кнопку (за получение положительного сигнала в метод addEventListener (путем нажатия клавиши) отвечает тег "keydown") и после вызывается функция moveUp
-function moveUp() {//Создаем функцию moveUp
-	yPos -= 35;//При положительно сигнале от document.addEventListener("keydown"… наша птица будет опускаться на 35 пикселе (yPos -= 35)
-	fly.play();//И одновременно с перемешением издавать звук fly.mp3
-}//
 
-// Создание блоков
-var pipe = [];//Создаем пустой, ПОКА ПУСТОЙ!!! массив (pipe)
+document.addEventListener("keydown", moveUp);
+function moveUp() {
+	yPos -= 35;
+}
 
-pipe[0] = {//создаем один объект в массиве, поэтому указываем что он нулевой(то есть первый но в JS первый является нулевым)
-	x : cvs.width,//это объект который прозрачен и расположен на всю ширену окна игры и он статичен в плане высоты, короче это линия прозрачная без высоты но распложенная на всю ширену по которой в цикле for (i) будут передвигатьсяпредпядствия и верхние и нижнее
-	y : 0//нулевое положение в  высоте или статичное в плане что его нет
+
+var pipe = []
+
+pipe[0] = {
+	x : cvs.width,
+	y : 0
 }//
 
 var score = 0;
-// Позиция птички
-var xPos = 10;//Позиция птрицы по x
-var yPos = 150;//Позиция птрицы по y
-var grav = 2;//Скорость с которой птичка опускается по y (игрику) вниз
 
-function draw() { //Создаем функцию draw
-	ctx.drawImage(bg, 0, 0);//которая в нашем canvas2D(ctx) рисуем с помошью метода drawImage задний фон (bg) нв координатах 0, 0
+var xPos = 10;
+var yPos = 150;
+var grav = 2;
 
-	for(var i = 0; i < pipe.length; i++) {//в этом цикле мы будем генерировать премятствия для птички
-	ctx.drawImage(pipeUp, pipe[i].x, pipe[i].y);//Мы отображаем верхнее препядствие (pipeUp) с помошью метода drawImage
+function draw() { 
+	ctx.drawImage(bg, 0, 0);
 
-	ctx.drawImage(pipeBottom, pipe[i].x, pipe[i].y +//Мы отображаем нижнее препядствие (pipeBottom) с помошью метода drawImage,
+	for(var i = 0; i < pipe.length; i++) {
+	ctx.drawImage(pipeUp, pipe[i].x, pipe[i].y);
+
+	ctx.drawImage(pipeBottom, pipe[i].x, pipe[i].y +
 	pipeUp.height + gap);//но генерация нижнего блока будет принижена на 90 пикселей из-за pipeUp.height + gap (pipeUp - это верхнее препядствие, pipeUp.height - это высота всего верхнего блока, gap - это отступ между верхним и нижним препядствием) и их сложение дает этот отступ
 
 	pipe[i].x--;//Заставляем блоки ,то есть кажда блок потому что в квадратных скобкаж объявлен цикл который перебирает все объекты в нем изи за метода в цикле pipe.length(pipe[i]) по x(иксу)двигаться вперед на 1(x--)
